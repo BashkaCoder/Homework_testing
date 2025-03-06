@@ -1,46 +1,16 @@
-// ProductTest.java
 package org.example.tests;
 
-import org.example.pages.*;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
-import org.testng.annotations.*;
-import java.time.Duration;
+import org.testng.annotations.Test;
 
-public class ProductTest {
-    private WebDriver driver;
-    private WebDriverWait wait;
-    private HomePage homePage;
-    private ProductPage productPage;
-    private CartPage cartPage;
-
-    @BeforeMethod
-    public void setUp() {
-        System.setProperty("webdriver.chrome.driver", "C:\\Users\\1\\Downloads\\chromedriver-win64\\chromedriver-win64\\chromedriver.exe");
-        ChromeOptions options = new ChromeOptions();
-        driver = new ChromeDriver(options);
-        driver.manage().window().maximize();
-        driver.get("https://www.demoblaze.com");
-        wait = new WebDriverWait(driver, Duration.ofSeconds(20)); // Увеличено время ожидания
-        homePage = new HomePage(driver, wait);
-        productPage = new ProductPage(driver, wait);
-        cartPage = new CartPage(driver, wait);
-    }
-
+public class ProductTest extends BaseTest {
     @Test
-    public void testDeleteFromCart() {
-        homePage.clickFirstProduct();
-        productPage.addToCart();
+    public void verifyProductRemovalFromCart() {
+        homePage.openFirstProduct();
+        productPage.addProductToCart();
         cartPage.openCart();
-        cartPage.deleteProduct();
-        Assert.assertTrue(cartPage.isCartEmpty(), "Корзина не пуста!");
-    }
+        cartPage.removeProductFromCart();
 
-    @AfterMethod
-    public void tearDown() {
-        driver.quit();
+        Assert.assertTrue(cartPage.isCartEmpty(), "Cart is not empty after removal");
     }
 }
